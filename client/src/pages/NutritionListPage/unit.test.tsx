@@ -23,12 +23,17 @@ describe('NutritionListPage', () => {
         console.error = originalError
     })
 
-    it('should render list of ', () => {
+    it('should reset list', () => {
         const mockClient = createMockClient();
+
+        const dataSequence = [
+            testData,
+            [],
+        ]
 
         mockClient.setRequestHandler(
             nutritionListQuery,
-            () => Promise.resolve({ data: testData }));
+            () => Promise.resolve({ data: dataSequence.pop() }));
 
         const renderTree = render(
             <ApolloProvider client={mockClient}>
@@ -36,13 +41,19 @@ describe('NutritionListPage', () => {
             </ApolloProvider>
         )
 
+        // Validate preconditions
         expect(renderTree).toMatchSnapshot()
+
+        // the queries can accept a regex to make your selectors more resilient to content tweaks and changes.
+        fireEvent.click(screen.getByLabelText(/Reset/i))
+
+        expect(screen.getByText('Oreo')).toBeInTheDocument()
     });
 });
 
 const testData:NutritionListEntry[] = [
     {
-        dessert: "Oreo",
+        dessert: 'Oreo',
         nutritionInfo: {
             calories: 437,
             fat: 18,
@@ -51,7 +62,7 @@ const testData:NutritionListEntry[] = [
         }
     },
     {
-        dessert: "Nougat",
+        dessert: 'Nougat',
         nutritionInfo: {
             calories: 360,
             fat: 19,
