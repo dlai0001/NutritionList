@@ -92,9 +92,7 @@ const rootResolvers = {
             return false
         },
         remove: async (parent, args, context, info) => {
-            const {desserts} = args
-
-            console.log("desserts param", desserts)
+            const {desserts} = args            
 
             const origCount = database.length
             database = database.filter(x => !desserts.includes(x.dessert))
