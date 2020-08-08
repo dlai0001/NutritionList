@@ -1,9 +1,8 @@
-import {NutritionListPage} from '.'
+import { NutritionListPage } from '.'
 import React from 'react'
-import {render, fireEvent, screen} from '@testing-library/react'
-import { ApolloProvider } from '@apollo/client'
-import { createMockClient } from 'mock-apollo-client';
-import { nutritionListQuery } from './queries';
+import { render, fireEvent, screen } from '@testing-library/react'
+import { MockedProvider } from '@apollo/client/testing'
+import { nutritionListQuery, resetMutation } from './queries';
 
 
 const originalError = console.error;
@@ -11,7 +10,7 @@ const originalError = console.error;
 describe('NutritionListPage', () => {
 
     beforeAll(() => {
-        console.error = (...args) => {
+        console.error = (...args: string[]) => {
             if (/Warning.*not wrapped in act/.test(args[0])) {
                 return
             }
@@ -23,35 +22,68 @@ describe('NutritionListPage', () => {
         console.error = originalError
     })
 
-    it('should reset list', () => {
-        const mockClient = createMockClient();
+    it('should reset list', async () => {
+        let resetCalled = false
 
-        const dataSequence = [
-            testData,
-            [],
+        const mockNultritionListQuery = {
+            request: {
+                query: nutritionListQuery,
+            },
+            result: () => ({
+                data: {
+                    nutritionList: resetCalled ? testData : [...testData, testEntry],
+                },
+            }),
+        }
+
+        const mocks = [
+            // Note: There is a bug in MockProvider which requires us to put the request in the mock
+            // provider 2x.
+            mockNultritionListQuery,
+            mockNultritionListQuery,
+            {
+                request: {
+                    query: resetMutation,
+                },
+                result: () => {
+                    resetCalled = true
+
+                    return {
+                        data: {
+                            nutritionList: {
+                                reset: true,
+                            },
+                        },
+                    }
+                },
+            },
         ]
 
-        mockClient.setRequestHandler(
-            nutritionListQuery,
-            () => Promise.resolve({ data: dataSequence.pop() }));
-
         const renderTree = render(
-            <ApolloProvider client={mockClient}>
+            <MockedProvider mocks={mocks}>
                 <NutritionListPage />
-            </ApolloProvider>
+            </MockedProvider>
         )
 
+        // await end of promise queue
+        await new Promise(resolve => setTimeout(resolve, 0));
+
         // Validate preconditions
-        expect(renderTree).toMatchSnapshot()
+        expect(renderTree.container.innerHTML).toMatchSnapshot()
+        expect(screen.getByText('Oreo')).toBeInTheDocument()
+        expect(screen.getByText('Ice Cream')).toBeInTheDocument()
 
         // the queries can accept a regex to make your selectors more resilient to content tweaks and changes.
-        fireEvent.click(screen.getByLabelText(/Reset/i))
+        fireEvent.click(screen.getByText(/Reset/i))
+
+        await new Promise(resolve => setImmediate(resolve, 0));
 
         expect(screen.getByText('Oreo')).toBeInTheDocument()
+
     });
 });
 
-const testData:NutritionListEntry[] = [
+const testData = [
     {
         dessert: 'Oreo',
         nutritionInfo: {
@@ -59,7 +91,8 @@ const testData:NutritionListEntry[] = [
             fat: 18,
             carb: 63,
             protein: 4,
-        }
+        },
+        __typename: 'NutritionEntry',
     },
     {
         dessert: 'Nougat',
@@ -68,6 +101,18 @@ const testData:NutritionListEntry[] = [
             fat: 19,
             carb: 9,
             protein: 37,
-        }
+        },
+        __typename: 'NutritionEntry',
     },
 ]
+
+const testEntry = {
+    dessert: 'Ice Cream',
+    nutritionInfo: {
+        calories: 140,
+        fat: 7,
+        carb: 16,
+        protein: 2,
+    },
+    __typename: 'NutritionEntry',
+}

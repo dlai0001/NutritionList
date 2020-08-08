@@ -16,7 +16,7 @@ export const NutritionListEntry: FunctionComponent<NutritionListEntryProps> = ({
 
     return (
         <tr>
-            <td className="pv3 pr3 bb b--black-20"><input type="checkbox" checked={selected} onChange={onSelect} /></td>
+            <td className="pv3 pr3 bb b--black-20"><input type="checkbox" defaultChecked={selected} onChange={onSelect} /></td>
             <td className="pv3 pr3 bb b--black-20">{dessert.dessert}</td>
             <td className="pv3 pr3 bb b--black-20">{calories}</td>
             <td className="pv3 pr3 bb b--black-20">{fat}</td>
