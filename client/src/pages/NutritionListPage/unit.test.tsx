@@ -3,24 +3,10 @@ import React from 'react'
 import { render, fireEvent, screen } from '@testing-library/react'
 import { MockedProvider } from '@apollo/client/testing'
 import { nutritionListQuery, resetMutation } from './queries';
+import { InMemoryCache } from '@apollo/client';
 
-
-const originalError = console.error;
 
 describe('NutritionListPage', () => {
-
-    beforeAll(() => {
-        console.error = (...args: string[]) => {
-            if (/Warning.*not wrapped in act/.test(args[0])) {
-                return
-            }
-            originalError.call(console, ...args)
-        }
-    })
-
-    afterAll(() => {
-        console.error = originalError
-    })
 
     it('should reset list', async () => {
         let resetCalled = false
@@ -59,8 +45,10 @@ describe('NutritionListPage', () => {
             },
         ]
 
+        const cache = createCache();
+
         const renderTree = render(
-            <MockedProvider mocks={mocks}>
+            <MockedProvider mocks={mocks} cache={cache}>
                 <NutritionListPage />
             </MockedProvider>
         )
@@ -116,3 +104,22 @@ const testEntry = {
     },
     __typename: 'NutritionEntry',
 }
+function createCache() {
+    return new InMemoryCache({
+        typePolicies: {
+            NutritionEntry: {
+                keyFields: ['dessert'],
+            },
+            Query: {
+                fields: {
+                    nutritionList: {
+                        merge(_ignored, incoming) {
+                            return incoming;
+                        },
+                    }
+                }
+            }
+        },
+    });
+}
+
