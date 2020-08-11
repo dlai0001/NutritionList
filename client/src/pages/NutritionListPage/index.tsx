@@ -13,7 +13,7 @@ export const NutritionListPage: FunctionComponent = () => {
     // Main list query
     const { loading, data } = useNutritionList()
     const nutritionList = data?.nutritionList
-
+    
     // Calls to mutations
     const [addDessert] = useAddDessert()
     const [removeDessert] = useRemoveDessert()

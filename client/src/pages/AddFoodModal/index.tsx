@@ -23,7 +23,7 @@ type NutritionFormProps = {
 
 export const AddFoodModal: FunctionComponent<{onSubmit: (values: NutritionListEntry)=>any}> = ({onSubmit}) => {
     return (
-        <div className="pa2 bg-white">
+        <div className="pa2 bg-white" data-testId="AddFoodModal">
             <div className="bg-gold pa2 white fw6">
                 <i className="fa fa-exclamation-triangle ma2" aria-hidden="true"></i>
                 Please fill all details before you submit
@@ -57,35 +57,41 @@ export const AddFoodModal: FunctionComponent<{onSubmit: (values: NutritionListEn
                                 <div className="flex flex-column">
                                     <label>Dessert Name*</label>
                                     <input name="dessert"
+                                        data-testId="DessertNameInput"
                                         onChange={formikProps.handleChange}
                                         onBlur={formikProps.handleBlur} />
                                     <div className="red">{formikProps.touched['dessert'] && formikProps.errors['dessert']}&nbsp;</div>
 
                                     <label>Calories*</label>
                                     <input name="calories"
+                                        data-testId="CaloriesInput"
                                         onChange={formikProps.handleChange}
                                         onBlur={formikProps.handleBlur} />
                                     <div className="red">{formikProps.touched['calories'] && formikProps.errors['calories']}&nbsp;</div>
 
                                     <label>Fat*</label>
                                     <input name="fat"
+                                        data-testId="FatInput"
                                         onChange={formikProps.handleChange}
                                         onBlur={formikProps.handleBlur} />
                                     <div className="red">{formikProps.touched['fat'] && formikProps.errors['fat']}&nbsp;</div>
 
                                     <label>Carbs*</label>
                                     <input name="carb"
+                                        data-testId="CarbInput"
                                         onChange={formikProps.handleChange}
                                         onBlur={formikProps.handleBlur} />
                                     <div className="red">{formikProps.touched['carb'] && formikProps.errors['carb']}&nbsp;</div>
 
                                     <label>Protein*</label>
                                     <input name="protein"
+                                        data-testId="ProteinInput"
                                         onChange={formikProps.handleChange}
                                         onBlur={formikProps.handleBlur} />
                                     <div className="red">{formikProps.touched['protein'] && formikProps.errors['protein']}&nbsp;</div>
 
                                     <button
+                                        data-testId="SubmitButton"
                                         className={
                                             'white f6 link br1 ph3 pv2 mb2 dib white bg-dark-green ba b--blue bw2 fw6 ' +
                                             ((formikProps.dirty && formikProps.isValid) ? 'dim' : 'disabled')

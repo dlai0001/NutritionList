@@ -14,7 +14,6 @@ export const nutritionListQuery = gql`
         }
     }
 `
-debugger;
 
 export const useNutritionList = () => useQuery(nutritionListQuery)
 
