@@ -123,7 +123,7 @@ export const NutritionListPage: FunctionComponent = () => {
             />
 
             <table className="f6 w-100 mw8 center">
-                <thead>
+                <thead className="table-header">
                     <tr>
                         <th className="fw6 bb b--black-20 tl pb3 pr3 bg-white">
                             <input type="checkbox" checked={selectAllChecked} onChange={toggleSelectAll} />
@@ -165,21 +165,21 @@ const NutritionListControls: FunctionComponent<NutritionListControlsProps> = (pr
                 <span className="f1 fw6">
                     Nutrition List
                 </span>
-                <span className="f6 link dim br1 ph3 pv2 mb2 dib white bg-dark-green ba b--blue bw2 fw6" onClick={handleReset}>
+                <span className="action-button f6 link dim br1 ph3 pv2 mb2 dib white bg-dark-green ba b--blue bw2 fw6" onClick={handleReset}>
                     <i className="fa fa-refresh ma2" aria-hidden="true"></i>
                     Reset Data
                 </span>
             </div>
 
-            <div className="bg-washed-red fw6 flex flex-row justify-between">
-                <p className="purple v-mid ml2">{selectedCount} selected</p>
-                <div className="w-30 flex flex-row items-end">
-                    <span className="f6 link dim br1 ph3 pv2 mb2 dib dark-green bg-white ma2" onClick={handleAdd}>
+            <div className="action-container bg-washed-red fw6 flex flex-row justify-between w-100">
+                <div className="selected-label purple v-mid pa3 ">{selectedCount} selected</div>
+                <div className="actions-bar w-40 flex flex-row items-end ">
+                    <span className="action-button link dim br1 ph3 pv2 mb2 dib dark-green bg-white ma2" onClick={handleAdd}>
                         <i className="fa fa-plus mr2" aria-hidden="true"></i>
                         ADD NEW
                     </span>
                     <span
-                        className={'f6 link br1 ph3 pv2 mb2 dib dark-green bg-white ma2 ' + (selectedCount ? 'dim' : 'disabled')}
+                        className={'action-button f6 link br1 ph3 pv2 mb2 dib dark-green bg-white ma2 ' + (selectedCount ? 'dim' : 'disabled')}
                         onClick={handleDelete}
                     >
                         <i className="fa fa-trash mr2" aria-hidden="true"></i>
